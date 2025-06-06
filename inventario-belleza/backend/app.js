@@ -1,3 +1,5 @@
+// api/productos/index.js (o server.js según el nombre del archivo principal)
+
 const createError = require('http-errors');
 const express = require('express');
 const path = require('path');
@@ -21,12 +23,11 @@ app.use(cookieParser());
 app.use('/api/productos', productosRouter);
 
 // MongoDB
-require('dotenv').config();
 const mongoose = require('mongoose');
 
 mongoose.connect(process.env.MONGO_URI)
   .then(() => console.log('✅ Conectado a MongoDB'))
   .catch(err => console.error('❌ Error de conexión', err));
 
-
+// Exportar la app para usarla en bin/www o index.js
 module.exports = app;

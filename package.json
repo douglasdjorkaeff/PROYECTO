@@ -9,8 +9,16 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
+    "@emotion/react": "^11.14.0",
+    "@emotion/styled": "^11.14.0",
+    "@mui/material": "^7.1.1",
+    "bootstrap": "^5.3.6",
     "express": "^5.1.0",
     "html5-qrcode": "^2.3.8",
-    "react-barcode": "^1.6.1"
+    "react": "^18.2.0",
+    "react-barcode": "^1.6.1",
+    "react-bootstrap": "^2.10.10",
+    "react-dom": "^18.2.0",
+    "react-toastify": "^11.0.5"
   }
 }

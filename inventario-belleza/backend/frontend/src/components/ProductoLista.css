@@ -1,0 +1,85 @@
+/* Contenedor con margen y scroll horizontal si hace falta */
+.producto-lista-container {
+  margin: 0 10px 20px 10px;
+}
+
+/* Ajustamos el ancho mínimo de la celda de código de barras para que no colapse */
+.barcode-cell {
+  min-width: 150px;
+  white-space: nowrap; /* Evita que se rompa el SVG */
+}
+
+/* En móviles, hacemos que la tabla tenga un tamaño de letra menor para que quepa mejor */
+@media (max-width: 576px) {
+  .producto-lista-table {
+    font-size: 0.85rem;
+  }
+
+  /* Opcional: hacer que la celda de código de barras sea un poco más chica */
+  .barcode-cell svg {
+    height: 30px !important;
+  }
+}
+
+/* En pantallas medianas, aumentamos un poco el tamaño del botón para mejor accesibilidad */
+@media (min-width: 577px) and (max-width: 992px) {
+  .producto-lista-table button {
+    font-size: 0.9rem;
+    padding: 0.25rem 0.5rem;
+  }
+}
+
+.producto-lista-container {
+  margin: 0 10px 20px 10px;
+}
+
+/* Estilos para las cards en móvil */
+.producto-card {
+  background: white;
+  border: 1px solid #ddd;
+}
+
+/* Barcode en cards */
+.barcode-card svg {
+  width: 100%;
+  max-height: 50px;
+  display: block;
+  margin: 5px 0;
+}
+
+/* En móvil, fuente un poco más chica */
+@media (max-width: 576px) {
+  .producto-card {
+    font-size: 0.9rem;
+  }
+}
+
+/* Ajustes para la celda de barcode en la tabla */
+.barcode-cell {
+  min-width: 150px;
+  white-space: nowrap;
+}
+
+
+/* Mensaje vacío con fade-in */
+.producto-lista-empty {
+  font-size: 1.2rem;
+  color: #555;
+  animation: fadeIn 1s ease forwards;
+  margin-top: 2rem;
+}
+
+/* Animación fade-in */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Hover ligero en cards para desktop */
+@media (min-width: 768px) {
+  .producto-card:hover {
+    box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+    transform: translateY(-3px);
+    transition: all 0.3s ease;
+  }
+}

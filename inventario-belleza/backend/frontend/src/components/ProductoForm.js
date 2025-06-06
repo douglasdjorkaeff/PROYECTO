@@ -1,41 +1,97 @@
-import React, { useState } from 'react';
 import api from '../api';
+import React, { useState, useEffect } from 'react';
 
-const ProductoForm = ({ onProductoCreado }) => {
-  const [form, setForm] = useState({
-    nombre: '',
-    descripcion: '',
-    precio: '',
-    stock: '',
-    codigo: '',
-  });
+function ProductoForm({ onProductoCreado, codigoInicial = '' }) {
+  const [nombre, setNombre] = useState('');
+  const [precio, setPrecio] = useState('');
+  const [cantidad, setCantidad] = useState('');
+  const [codigoBarras, setCodigoBarras] = useState(codigoInicial);
+  const [esCodigoEscaneado, setEsCodigoEscaneado] = useState(false);
 
-  const handleChange = e => {
-    setForm({ ...form, [e.target.name]: e.target.value });
-  };
+  useEffect(() => {
+    if (codigoInicial) {
+      setCodigoBarras(codigoInicial);
+      setEsCodigoEscaneado(true);
+    }
+  }, [codigoInicial]);
 
-  const handleSubmit = async e => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    const nuevoProducto = { nombre, precio, cantidad, codigoBarras };
+
     try {
-      const res = await api.post('/productos', form);
-      onProductoCreado(res.data);
-      setForm({ nombre: '', descripcion: '', precio: '', stock: '', codigo: '' });
+      const res = await fetch('/api/productos', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(nuevoProducto),
+      });
+
+      if (res.ok) {
+        const productoGuardado = await res.json();
+        onProductoCreado(productoGuardado);
+        setNombre('');
+        setPrecio('');
+        setCantidad('');
+        setCodigoBarras('');
+        setEsCodigoEscaneado(false);
+        alert('✅ Producto registrado correctamente');
+      } else {
+        alert('❌ Error al registrar producto');
+      }
     } catch (err) {
-      alert('Error al guardar producto');
+      console.error('Error en el envío del producto:', err);
     }
   };
 
   return (
     <form onSubmit={handleSubmit}>
-      <h3>Crear Producto</h3>
-      <input name="nombre" placeholder="Nombre" value={form.nombre} onChange={handleChange} />
-      <input name="descripcion" placeholder="Descripción" value={form.descripcion} onChange={handleChange} />
-      <input name="precio" type="number" placeholder="Precio" value={form.precio} onChange={handleChange} />
-      <input name="stock" type="number" placeholder="Stock" value={form.stock} onChange={handleChange} />
-      <input name="codigo" placeholder="Código de barras" value={form.codigo} onChange={handleChange} />
-      <button type="submit">Guardar</button>
+      <h4>Registrar nuevo producto</h4>
+
+      <div>
+        <label>Nombre:</label><br />
+        <input
+          type="text"
+          value={nombre}
+          onChange={(e) => setNombre(e.target.value)}
+          required
+        />
+      </div>
+
+      <div>
+        <label>Precio:</label><br />
+        <input
+          type="number"
+          value={precio}
+          onChange={(e) => setPrecio(e.target.value)}
+          required
+        />
+      </div>
+
+      <div>
+        <label>Cantidad:</label><br />
+        <input
+          type="number"
+          value={cantidad}
+          onChange={(e) => setCantidad(e.target.value)}
+          required
+        />
+      </div>
+
+      <div>
+        <label>Código de Barras:</label><br />
+        <input
+          type="text"
+          value={codigoBarras}
+          onChange={(e) => setCodigoBarras(e.target.value)}
+          required
+          readOnly={esCodigoEscaneado} // 👈 Solo lectura si vino del escáner
+          style={{ backgroundColor: esCodigoEscaneado ? '#eee' : 'white' }}
+        />
+      </div>
+
+      <button type="submit" style={{ marginTop: '1rem' }}>Guardar producto</button>
     </form>
   );
-};
+}
 
 export default ProductoForm;

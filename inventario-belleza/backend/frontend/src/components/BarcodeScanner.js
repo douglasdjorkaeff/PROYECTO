@@ -1,33 +1,33 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
+import { Html5QrcodeScanner } from 'html5-qrcode';
 
 const BarcodeScanner = ({ onScanSuccess }) => {
+  const scannerRef = useRef(null);
+
   useEffect(() => {
-    let scannerInstance;
-
-    import('html5-qrcode').then(({ Html5QrcodeScanner }) => {
-      scannerInstance = new Html5QrcodeScanner('scanner', {
-        fps: 10,
-        qrbox: { width: 250, height: 250 },
-        formatsToSupport: ['QR_CODE', 'EAN_13', 'CODE_128', 'UPC_A', 'EAN_8', 'CODE_39']
-      });
-
-      scannerInstance.render(
-        (decodedText) => {
-          scannerInstance.clear();
-          onScanSuccess(decodedText);
-        },
-        (error) => {
-          // Silenciar errores menores
-        }
-      );
+    scannerRef.current = new Html5QrcodeScanner('scanner', {
+      fps: 10,
+      qrbox: { width: 850, height: 720 },
+      formatsToSupport: ['EAN_13', 'CODE_128', 'UPC_A']
     });
 
+    scannerRef.current.render(
+      (decodedText) => {
+        scannerRef.current.clear().then(() => {
+          onScanSuccess(decodedText);
+        }).catch(console.error);
+      },
+      (error) => {
+        // Errores silenciosos
+      }
+    );
+
     return () => {
-      if (scannerInstance) {
-        scannerInstance.clear().catch(console.error);
+      if (scannerRef.current) {
+        scannerRef.current.clear().catch(console.error);
       }
     };
-  }, [onScanSuccess]);
+  }, []); // Solo montar/desmontar una vez
 
   return <div id="scanner" />;
 };
